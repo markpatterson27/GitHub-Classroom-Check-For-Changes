@@ -1,0 +1,13 @@
+name: Example
+
+on:
+  workflow_dispatch:
+
+jobs:
+  change-check-workflow:
+    uses: markpatterson27/GitHub-Classroom-Check-For-Changes/.github/workflows/change-check.yml@main
+
+  change-check-workflow-with-input:
+    uses: markpatterson27/GitHub-Classroom-Check-For-Changes/.github/workflows/change-check.yml@main
+    with:
+      paths: README.md LICENSE
