@@ -1,0 +1,47 @@
+name: Reusable workflow for checking for changes
+
+on:
+  workflow_call:
+    inputs:
+      paths:
+        description: 'Path to check for changed files'
+        default: '.github'
+        required: false
+        type: string
+
+jobs:
+  change-check:
+    name: Check path
+    runs-on: ubuntu-latest
+    steps:
+      # checkout full repo
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Change check
+        run: |
+          echo "Checking for commits affecting ${{ inputs.paths }}..."
+          status=0
+
+          # check for feedback branch
+          branches=$(git for-each-ref --format='%(refname:short)' refs/heads/)
+          if [[ $branches == *"feedback"* ]]; then
+            base="feedback"
+          else
+            base=$(git rev-list --max-parents=0 HEAD)
+          fi
+
+          paths=( ${{ inputs.paths }} )
+
+          for path in ${paths[@]}; do
+            # check for commits
+            if [[ $(git log $base..main $path) ]]; then
+              echo "Changes found to $path"
+              status=1
+            else
+              echo "No changes found to $path"
+            fi
+          done
+
+          exit $status
