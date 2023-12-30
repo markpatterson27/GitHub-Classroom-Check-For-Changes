@@ -44,12 +44,21 @@ jobs:
 
           paths=( ${{ inputs.paths }} )
 
+          exclude_authors=$(echo ${{ inputs.exclude-authors }}) # spaces in names | tr ' ' '|')
+
+          command="git log $base..main --perl-regexp --author='^((?!$exclude_authors).)*$'"
+          if [[ "${{ inputs.exclude-paths }}" != "" ]]; then
+            exclude=" ':(exclude)${{ inputs.exclude-paths }}'"
+          fi
+
           for path in ${paths[@]}; do
+            command="$command $path$exclude"
+            echo "Running git log command: \"$command\""
             # check for commits
-            if [[ $(git log $base..main --perl-regexp --author='^((?!${{ inputs.exclude-authors }}).)*$') $path ':(exclude)${{ inputs.exclude-paths }}') ]]; then
+            if [[ $(eval $command) ]]; then
               echo "::error file=$path:: Changes found to $path"
               echo "::group::Commits"
-              git log $base..main --perl-regexp --author='^((?!${{ inputs.exclude-authors }}).)*$') $path ':(exclude)${{ inputs.exclude-paths }}'
+              eval $command
               echo "::endgroup::"
               status=1
             else
