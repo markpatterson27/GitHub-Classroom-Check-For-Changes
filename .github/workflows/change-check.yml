@@ -15,7 +15,7 @@ on:
         type: string
       exclude-authors:
         description: 'Authors to exclude from check. Needs to be pipe separated'
-        default: 'github-classroom[bot]'
+        default: 'github-classroom\[bot\]'
         required: false
         type: string
 
@@ -44,9 +44,10 @@ jobs:
 
           paths=( ${{ inputs.paths }} )
 
-          exclude_authors=$(echo ${{ inputs.exclude-authors }}) # spaces in names | tr ' ' '|')
+          # spaces in names makes parsing the input difficult
+          # exclude_authors=$(echo ${{ inputs.exclude-authors }}) # spaces in names | tr ' ' '|')
 
-          command="git log $base..main --perl-regexp --author='^((?!$exclude_authors).)*$'"
+          command="git log $base..main --perl-regexp --author='^((?!${{ inputs.exclude-authors }}).)*$'"
           if [[ "${{ inputs.exclude-paths }}" != "" ]]; then
             exclude=" ':(exclude)${{ inputs.exclude-paths }}'"
           fi

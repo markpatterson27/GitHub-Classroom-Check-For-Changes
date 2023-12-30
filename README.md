@@ -32,4 +32,4 @@ jobs:
 |---|---|---|---|
 | `paths` | no | '.github' | Space separated list of paths to check. |
 | `exclude-paths` | no | '' | Space separated list of paths to exclude from check. |
-| `exclude-authors` | no | 'github-classroom[bot]' | Pipe separated list of authors to exclude from check. |
+| `exclude-authors` | no | 'github-classroom[bot]' | Pipe separated list of authors to exclude from check. This list is processed as a regular expression. Special characters must be escaped. |
