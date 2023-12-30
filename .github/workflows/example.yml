@@ -11,3 +11,9 @@ jobs:
     uses: markpatterson27/GitHub-Classroom-Check-For-Changes/.github/workflows/change-check.yml@main
     with:
       paths: README.md LICENSE
+
+  change-check-workflow-with-exclude:
+    uses: markpatterson27/GitHub-Classroom-Check-For-Changes/.github/workflows/change-check.yml@main
+    with:
+      paths: .github
+      exclude: .github/.keep

@@ -8,6 +8,11 @@ on:
         default: '.github'
         required: false
         type: string
+      exclude:
+        description: 'Path to exclude from check'
+        default: ''
+        required: false
+        type: string
 
 jobs:
   change-check:
@@ -36,10 +41,10 @@ jobs:
 
           for path in ${paths[@]}; do
             # check for commits
-            if [[ $(git log $base..main $path) ]]; then
+            if [[ $(git log $base..main $path ':(exclude)${{ inputs.exclude }}') ]]; then
               echo "::error file=$path:: Changes found to $path"
               echo "::group::Commits"
-              git log $base..main $path
+              git log $base..main $path ':(exclude)${{ inputs.exclude }}'
               echo "::endgroup::"
               status=1
             else

@@ -23,6 +23,7 @@ jobs:
     uses: markpatterson27/GitHub-Classroom-Check-For-Changes/.github/workflows/change-check.yml@main
     with:
       paths: '.github'
+      exclude: '.github/.keep'
 ```
 
 ## Inputs
@@ -30,3 +31,4 @@ jobs:
 | Input Name | Required | Default | Description |
 |---|---|---|---|
 | `paths` | no | '.github' | Space separated list of paths to check. |
+| `exclude` | no | '' | Space separated list of paths to exclude from check. |
