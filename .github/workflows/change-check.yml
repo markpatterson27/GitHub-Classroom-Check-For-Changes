@@ -8,7 +8,7 @@ on:
         default: '.github'
         required: false
         type: string
-      exclude:
+      exclude-paths:
         description: 'Path to exclude from check'
         default: ''
         required: false
@@ -41,10 +41,10 @@ jobs:
 
           for path in ${paths[@]}; do
             # check for commits
-            if [[ $(git log $base..main $path ':(exclude)${{ inputs.exclude }}') ]]; then
+            if [[ $(git log $base..main $path ':(exclude)${{ inputs.exclude-paths }}' --perl-regexp --author='^((?!github-classroom[bot]|excluded_author2).)*$') ]]; then
               echo "::error file=$path:: Changes found to $path"
               echo "::group::Commits"
-              git log $base..main $path ':(exclude)${{ inputs.exclude }}'
+              git log $base..main $path ':(exclude)${{ inputs.exclude-paths }}'
               echo "::endgroup::"
               status=1
             else
